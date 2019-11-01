@@ -1,0 +1,29 @@
+version: '3.7'
+services:
+  #PHP Service
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: redirections-tester-app
+    working_dir: /var/www
+    volumes:
+      - ./src:/var/www
+    networks:
+      - redirections-tester-network
+  #Nginx Service
+  webserver:
+    image: nginx:1.11.10
+    container_name: redirections-tester-webserver
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./src:/var/www
+      - ./docker/conf.d/:/etc/nginx/conf.d/
+    networks:
+      - redirections-tester-network
+#Docker Networks
+networks:
+  redirections-tester-network:
+    driver: bridge
